@@ -1,6 +1,10 @@
 import { Sequelize } from 'sequelize';
 
-export const sequelize = new Sequelize('eldegweydev2023_wasq', 'eldegweydev2023_user', '}8$b{KfwYzU5', {
-  host: '127.0.0.1',
-  dialect: 'mysql'
+export const sequelize = new Sequelize(
+  process.env.DB_DATABASE,
+  process.env.DB_USERNAME,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    dialect: 'mysql',
 });
