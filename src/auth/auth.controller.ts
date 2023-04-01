@@ -8,16 +8,18 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { confirmPhonenumberAuht } from './dto/confirm-phonenumber-auht.dto';
+import { PhoneNumberDto } from './dto/phone-number.dto';
 import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/confirm-phone-number')
-  confirmPhoneNumber(@Body() confirmPhonenumberAuht: confirmPhonenumberAuht) {
-    return this.authService.confirmPhoneNumber(confirmPhonenumberAuht);
+  confirmPhoneNumber(@Body() PhoneNumberDto: PhoneNumberDto) {
+    return this.authService.confirmPhoneNumber(PhoneNumberDto);
   }
 
   @Post('register')
@@ -26,7 +28,18 @@ export class AuthController {
   }
 
   @Post('login')
-  login() {
-    return this.authService.login();
+  login(@Body() LoginDto: LoginDto) {
+    return this.authService.login(LoginDto);
   }
+
+  @Post('check-user-exist-by-phone')
+  checkUserExistByPhone(@Body() PhoneNumberDto:PhoneNumberDto){
+    return this.authService.checkUserExistByPhone(PhoneNumberDto)
+  }
+
+  @Post('update-password-phone')
+  updatePasswordByPhoneNumber(@Body() UpdatePasswordDto: UpdatePasswordDto) {
+    return this.authService.updatePasswordByPhoneNumber(UpdatePasswordDto)
+  }
+
 }

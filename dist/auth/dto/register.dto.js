@@ -20,7 +20,14 @@ __decorate([
 ], RegisterDto.prototype, "phone_number", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.MinLength)(6),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "password", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.MinLength)(6),
+    (0, class_validator_1.Matches)('password'),
+    __metadata("design:type", String)
+], RegisterDto.prototype, "passwordConfirm", void 0);
 exports.RegisterDto = RegisterDto;
 //# sourceMappingURL=register.dto.js.map

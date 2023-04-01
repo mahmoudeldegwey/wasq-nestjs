@@ -15,27 +15,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
-const confirm_phonenumber_auht_dto_1 = require("./dto/confirm-phonenumber-auht.dto");
+const phone_number_dto_1 = require("./dto/phone-number.dto");
 const register_dto_1 = require("./dto/register.dto");
+const login_dto_1 = require("./dto/login.dto");
+const update_password_dto_1 = require("./dto/update-password.dto");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    confirmPhoneNumber(confirmPhonenumberAuht) {
-        return this.authService.confirmPhoneNumber(confirmPhonenumberAuht);
+    confirmPhoneNumber(PhoneNumberDto) {
+        return this.authService.confirmPhoneNumber(PhoneNumberDto);
     }
     register(RegisterDto) {
         return this.authService.register(RegisterDto);
     }
-    login() {
-        return this.authService.login();
+    login(LoginDto) {
+        return this.authService.login(LoginDto);
+    }
+    checkUserExistByPhone(PhoneNumberDto) {
+        return this.authService.checkUserExistByPhone(PhoneNumberDto);
+    }
+    updatePasswordByPhoneNumber(UpdatePasswordDto) {
+        return this.authService.updatePasswordByPhoneNumber(UpdatePasswordDto);
     }
 };
 __decorate([
     (0, common_1.Post)('/confirm-phone-number'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [confirm_phonenumber_auht_dto_1.confirmPhonenumberAuht]),
+    __metadata("design:paramtypes", [phone_number_dto_1.PhoneNumberDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "confirmPhoneNumber", null);
 __decorate([
@@ -47,10 +55,25 @@ __decorate([
 ], AuthController.prototype, "register", null);
 __decorate([
     (0, common_1.Post)('login'),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [login_dto_1.LoginDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('check-user-exist-by-phone'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [phone_number_dto_1.PhoneNumberDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "checkUserExistByPhone", null);
+__decorate([
+    (0, common_1.Post)('update-password-phone'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [update_password_dto_1.UpdatePasswordDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "updatePasswordByPhoneNumber", null);
 AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

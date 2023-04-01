@@ -1,4 +1,8 @@
-import { Table, Column, Model } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model
+} from 'sequelize-typescript';
 
 @Table({
   tableName: 'users',
@@ -10,8 +14,6 @@ import { Table, Column, Model } from 'sequelize-typescript';
   }
 })
 export class User extends Model {
-//   @Column
-//   id: number;
 
   @Column
   username: string;
@@ -24,4 +26,5 @@ export class User extends Model {
   
   @Column
   password: string;
+
 }

@@ -1,4 +1,9 @@
-import { IsNotEmpty, IsNumberString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumberString,
+  MinLength,
+  Matches,
+} from 'class-validator';
 
 export class RegisterDto {
   @IsNotEmpty()
@@ -6,6 +11,13 @@ export class RegisterDto {
   phone_number: number;
 
   @IsNotEmpty()
+  @MinLength(6)
   password: string;
+
+
+  @IsNotEmpty()
+  @MinLength(6)
+  @Matches('password')
+  passwordConfirm: string;
 
 }

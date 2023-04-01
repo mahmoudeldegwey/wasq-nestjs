@@ -1,7 +1,8 @@
 import { IsNotEmpty, IsNumberString } from 'class-validator';
 
-export class confirmPhonenumberAuht {
+export class PhoneNumberDto {
   @IsNotEmpty()
   @IsNumberString()
   phone_number: number;
+
 }
