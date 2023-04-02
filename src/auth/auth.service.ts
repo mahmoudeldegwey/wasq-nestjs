@@ -2,6 +2,7 @@ import { PhoneNumberDto } from './dto/phone-number.dto';
 import { Injectable } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { ConfirmCodeDto } from './dto/confirm-code.dto';
 
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
@@ -13,11 +14,6 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 export class AuthService {
   constructor(private jwt: JwtService) {}
 
-  confirmPhoneNumber(PhoneNumberDto: PhoneNumberDto) {
-    const phone_number: number = PhoneNumberDto.phone_number;
-    return { code: 132456 };
-  }
-
   async register(RegisterDto: RegisterDto) {
     try {
       const { phone_number, password } = RegisterDto;
@@ -28,25 +24,60 @@ export class AuthService {
       const user = await User.create({
         phone_number: phone_number,
         password: hashPassword,
+        confirm_code: 123456,
       });
 
-      const token = await this.signToken(user);
-
       return {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        phone_number: user.phone_number,
-        access_token: token.access_token,
+        status: 201,
+        message: 'User, Created Succesffully',
+        confirm_code: user.confirm_code,
       }
       
     } catch (error) {
-      console.log(error)
+     // console.log(error)
       return {
         status:500,
         error:true,
         errors: error.errors,
       };
+    }
+  }
+
+  async confirmCodeByPhoneNumber(ConfirmCodeDto: ConfirmCodeDto) {
+    const { phone_number, confirm_code } = ConfirmCodeDto;
+
+    const user = await User.findOne({
+      attributes: ['id', 'username', 'phone_number', 'email', 'password'],
+      where: { phone_number: phone_number, confirm_code: confirm_code },
+    });
+
+    if (!user) {
+      return {
+        status: 500,
+        error: true,
+        message: 'not found user,or incorrect confirmation code',
+      }
+    }
+
+    const token = await this.signToken(user);
+
+    await User.update(
+      { 
+        status: 1, 
+        confirm_code: null,
+        confirmed_at: new Date(),
+      },
+      {
+        where: { phone_number: phone_number },
+    });
+
+    return {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      phone_number: user.phone_number,
+      confirm_code: user.confirm_code,
+      access_token: token.access_token,
     }
   }
 
@@ -60,15 +91,19 @@ export class AuthService {
           [Op.or]: [
             { email: phone_number_or_email },
             { phone_number: phone_number_or_email },
+            { status: 1 },
+            { confirm_code: null}
           ],
+          status: 1,
+          confirm_code: null,
         }
       });
 
-      if(!user) {
+      if (!user) {
         return {
           status: 500,
           error: true,
-          message: 'not found user',
+          message: 'not found user,or not active',
         }
       }
 
@@ -103,19 +138,22 @@ export class AuthService {
   }
 
   async checkUserExistByPhone(PhoneNumberDto: PhoneNumberDto){
-    try{
-
-      const phone_number = PhoneNumberDto.phone_number 
+    try {
+      const phone_number = PhoneNumberDto.phone_number;
 
       const user = await User.findOne({
-        where: { phone_number: phone_number },
+        where: { 
+          phone_number: phone_number, 
+          status: 1,
+          confirm_code: null,
+        },
       });
 
       if (!user) {
         return {
           status: 500,
           error: true,
-          message: 'not found user',
+          message: 'not found user, or not active user',
         }
       }
 

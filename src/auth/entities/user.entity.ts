@@ -27,4 +27,12 @@ export class User extends Model {
   @Column
   password: string;
 
+  @Column
+  confirm_code: number;
+
+  @Column
+  status: boolean
+
+  @Column
+  confirmed_at: Date;
 }
