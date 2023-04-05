@@ -6,7 +6,7 @@ import {
 
 @Table({
   tableName: 'users',
-  timestamps: false,
+  //timestamps: false,
   defaultScope: {
     attributes: {
       exclude: ['password']
@@ -35,4 +35,12 @@ export class User extends Model {
 
   @Column
   confirmed_at: Date;
+
+  @Column
+  city_id: number;
+
+  @Column
+  address: string;
+
+
 }

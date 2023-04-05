@@ -3,9 +3,10 @@ import { Module } from '@nestjs/common';
 //import { CatsModule } from './cats/cats.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
+import { DevicesModule } from './devices/devices.module';
 
 @Module({
-  imports: [DatabaseModule, AuthModule],
+  imports: [DatabaseModule, AuthModule, DevicesModule],
   controllers: [],
   providers: [],
 })

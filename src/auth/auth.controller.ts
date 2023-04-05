@@ -6,6 +6,9 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
+  UseGuards,
+  Req
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { PhoneNumberDto } from './dto/phone-number.dto';
@@ -13,6 +16,11 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { ConfirmCodeDto } from './dto/confirm-code.dto';
+
+import { AuthGuard } from '@nestjs/passport';
+import { User } from '../auth/decorator/user.decorator';
+import { User as UserEntity } from '../auth/entities/user.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -42,5 +50,10 @@ export class AuthController {
   updatePasswordByPhoneNumber(@Body() UpdatePasswordDto: UpdatePasswordDto) {
     return this.authService.updatePasswordByPhoneNumber(UpdatePasswordDto);
   }
-
+  
+  @UseGuards(AuthGuard('jwt'))
+  @Put('update-user-data')
+  updateUserData(@Req() req,@User() user: UserEntity) {
+    return this.authService.updateUserData(req,user);
+  }
 }

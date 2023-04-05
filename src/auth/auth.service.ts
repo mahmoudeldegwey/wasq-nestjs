@@ -1,14 +1,18 @@
 import { PhoneNumberDto } from './dto/phone-number.dto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ConfirmCodeDto } from './dto/confirm-code.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+
 
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Op } from 'sequelize';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { User as UserGuard } from '../auth/decorator/user.decorator';
+import { User as UserEntity } from '../auth/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -90,9 +94,7 @@ export class AuthService {
         where: {
           [Op.or]: [
             { email: phone_number_or_email },
-            { phone_number: phone_number_or_email },
-            { status: 1 },
-            { confirm_code: null}
+            { phone_number: phone_number_or_email }
           ],
           status: 1,
           confirm_code: null,
@@ -206,6 +208,41 @@ export class AuthService {
         errors: error.errors,
       };
     } 
+  }
+
+  async updateUserData(
+    @Req() req,
+    @UserGuard() user: UserEntity,
+  ) {
+    try{
+      const { email, phone_number, city_id, address } = req.body;
+      //console.log(email)
+      await User.update(
+        {
+          email: email,
+          phone_number: phone_number,
+          city_id: city_id,
+          address: address
+        },
+        {
+          where: {
+            id: user.id,
+          },
+      });
+
+      return {
+        status: 201,
+        message: 'Update Password Succesffully',
+      }
+
+    }catch(error){
+      console.log(error)
+      return {
+        status: 500,
+        error: true,
+        errors: error,
+      };
+    }
   }
 
   async signToken(User: User) : Promise<{access_token:string}> {
