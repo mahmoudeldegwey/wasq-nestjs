@@ -210,15 +210,13 @@ export class AuthService {
     } 
   }
 
-  async updateUserData(
-    @Req() req,
-    @UserGuard() user: UserEntity,
-  ) {
-    try{
-      const { email, phone_number, city_id, address } = req.body;
+  async updateUserData(@Req() req, @UserGuard() user: UserEntity) {
+    try {
+      const { email, phone_number, city_id, address, username } = req.body;
       //console.log(email)
       await User.update(
         {
+          username: username,
           email: email,
           phone_number: phone_number,
           city_id: city_id,
@@ -232,7 +230,7 @@ export class AuthService {
 
       return {
         status: 201,
-        message: 'Update Password Succesffully',
+        message: 'Update Date Succesffully',
       }
 
     }catch(error){
