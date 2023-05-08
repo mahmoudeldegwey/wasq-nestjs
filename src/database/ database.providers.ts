@@ -16,7 +16,7 @@ export const databaseProviders = [
         password: '}8$b{KfwYzU5', //process.env.DB_PASSWORD,
         database: 'eldegweydev2023_wasq' //process.env.DB_DATABASE,
       });
-      sequelize.addModels([User, Device]);
+      sequelize.addModels([User, Device]); 
       await sequelize.sync();
       return sequelize;
     },
