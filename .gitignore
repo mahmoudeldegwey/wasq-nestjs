@@ -344,3 +344,4 @@ Icon
 .env
 dist
 
+src/database/database.providers.ts

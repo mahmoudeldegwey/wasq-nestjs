@@ -212,14 +212,14 @@ export class AuthService {
 
   async updateUserData(@Req() req, @UserGuard() user: UserEntity) {
     try {
-      const { email, phone_number, city_id, address, username } = req.body;
+      const { email, city_id, governorate_id, address, username } = req.body;
       //console.log(email)
       await User.update(
         {
           username: username,
           email: email,
-          phone_number: phone_number,
           city_id: city_id,
+          governorate_id: governorate_id,
           address: address
         },
         {
@@ -231,6 +231,13 @@ export class AuthService {
       return {
         status: 201,
         message: 'Update Date Succesffully',
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          phone_number: user.phone_number,
+          confirm_code: user.confirm_code,
+        },
       }
 
     }catch(error){
