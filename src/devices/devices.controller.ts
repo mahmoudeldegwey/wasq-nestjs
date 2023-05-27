@@ -36,4 +36,10 @@ export class DevicesController {
   remove(@Param('id') id: string) {
     return this.devicesService.remove(+id);
   }
+
+  @Get('/types')
+  getAllTypes(){
+    return this.devicesService.getAllTypes();
+  }
+
 }

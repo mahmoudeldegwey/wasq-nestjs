@@ -150,4 +150,17 @@ export class DevicesService {
       }
     }
   }
+
+  getAllTypes() {
+    try{
+      return ['labtop', 'phone', 'tablet']
+    }catch (error){
+      return {
+        status:500,
+        error:true,
+        errors: error,
+      }
+    }
+  }
+
 }

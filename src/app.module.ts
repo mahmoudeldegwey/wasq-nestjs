@@ -5,9 +5,11 @@ import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { DevicesModule } from './devices/devices.module';
 import { BrandsModule } from './brands/brands.module';
+import { GovernorateModule } from './governorate/governorate.module';
+import { CityModule } from './city/city.module';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, DevicesModule, BrandsModule],
+  imports: [DatabaseModule, AuthModule, DevicesModule, BrandsModule, GovernorateModule, CityModule],
   controllers: [],
   providers: [],
 })
