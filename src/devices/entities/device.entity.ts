@@ -1,12 +1,24 @@
-import { Table, Column, Model } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
+import { User } from 'src/auth/entities/user.entity';
 
 @Table({
   tableName: 'devices',
   //timestamps: false,
 })
 export class Device extends Model {
+  
+  @ForeignKey(() => User)
   @Column
   user_id: number;
+
+  @BelongsTo(() => User)
+  user: User;
 
   @Column
   device_type: string;

@@ -66,15 +66,21 @@ export class DevicesService {
   }
 
   async findOne(id: string) {
-    try{      
-
+    try {
       const device = await Device.findOne({
+        include:[
+          {
+            model: UserEntity,
+            attributes:['id','username','email','phone_number','address']
+          }
+        ],
         where: {
           [Op.or]: [{ id: id }, { serial_number: id }],
         }
       })
-      return device
 
+      return device
+      
     } catch(error){
       return {
         status:500,

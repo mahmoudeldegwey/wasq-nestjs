@@ -56,4 +56,12 @@ export class AuthController {
   updateUserData(@Req() req,@User() user: UserEntity) {
     return this.authService.updateUserData(req,user);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('user/:id')
+  findOne(@Param('id') id: string) {
+    return this.authService.findOne(id);
+  }
+
+
 }

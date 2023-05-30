@@ -13,6 +13,8 @@ import { Op } from 'sequelize';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User as UserGuard } from '../auth/decorator/user.decorator';
 import { User as UserEntity } from '../auth/entities/user.entity';
+import { City } from 'src/city/entities/city.entity';
+import { Governorate } from 'src/governorate/entities/governorate.entity';
 
 @Injectable()
 export class AuthService {
@@ -90,7 +92,26 @@ export class AuthService {
       const { phone_number_or_email, password } = LoginDto;
 
       const user = await User.findOne({
-        attributes: ['id', 'username', 'phone_number', 'email', 'password'],
+        attributes: [
+          'id',
+          'username',
+          'phone_number',
+          'email',
+          'password',
+          'city_id',
+          'governorate_id',
+          'address'
+        ],
+        include:[
+          {
+            model: City,
+            attributes:['id','name','longitude','latitude']
+          },
+          {
+            model: Governorate,
+            attributes:['id','name']
+          },
+        ],
         where: {
           [Op.or]: [
             { email: phone_number_or_email },
@@ -126,6 +147,17 @@ export class AuthService {
         email: user.email,
         username: user.username,
         phone_number: user.phone_number,
+        address:user.address,
+        governorate:{
+          id: user?.governorate?.id,
+          name: user?.governorate?.name,
+        },
+        city:{
+          id:user?.city?.id,
+          name:user?.city?.name,
+          latitude:user?.city?.latitude,
+          longitude:user?.city?.longitude
+        },
         access_token: token.access_token,
       }
 
@@ -249,6 +281,47 @@ export class AuthService {
       };
     }
   }
+
+  async findOne(id: string) {
+    try {
+
+      const user = await User.findOne({
+        attributes: [
+          'id',
+          'username',
+          'phone_number',
+          'email',
+          'password',
+          'city_id',
+          'governorate_id',
+          'address'
+        ],
+        include:[
+          {
+            model: City,
+            attributes:['id','name','longitude','latitude']
+          },
+          {
+            model: Governorate,
+            attributes:['id','name']
+          },
+        ],
+        where: {
+          id: id,
+        }
+      });
+
+      return user
+      
+    } catch(error){
+      return {
+        status:500,
+        error:true,
+        errors: error,
+      }
+    }
+  }
+
 
   async signToken(User: User) : Promise<{access_token:string}> {
     const payload = {

@@ -1,8 +1,12 @@
 import {
   Table,
   Column,
-  Model
+  Model,
+  ForeignKey,
+  BelongsTo
 } from 'sequelize-typescript';
+import { City } from 'src/city/entities/city.entity';
+import { Governorate } from 'src/governorate/entities/governorate.entity';
 
 @Table({
   tableName: 'users',
@@ -36,9 +40,21 @@ export class User extends Model {
   @Column
   confirmed_at: Date;
 
+  @ForeignKey(() => City)
   @Column
   city_id: number;
 
+  @BelongsTo(() => City)
+  city: City;
+
+  @ForeignKey(() => Governorate)
+  @Column
+  governorate_id: number;
+
+  @BelongsTo(() => Governorate)
+  governorate: Governorate;
+
+  
   @Column
   address: string;
 
