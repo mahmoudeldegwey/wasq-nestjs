@@ -260,15 +260,52 @@ export class AuthService {
           },
       });
 
+      const userUpdatedData = await User.findOne({
+        attributes: [
+          'id',
+          'username',
+          'phone_number',
+          'email',
+          'password',
+          'city_id',
+          'governorate_id',
+          'address'
+        ],
+        include:[
+          {
+            model: City,
+            attributes:['id','name','longitude','latitude']
+          },
+          {
+            model: Governorate,
+            attributes:['id','name']
+          },
+        ],
+        where: {
+          id: user.id,
+        }
+      });
+
       return {
         status: 201,
         message: 'Update Date Succesffully',
         user: {
           id: user.id,
-          email: user.email,
-          username: user.username,
-          phone_number: user.phone_number,
-          confirm_code: user.confirm_code,
+          email: userUpdatedData.email,
+          username: userUpdatedData.username,
+          phone_number: userUpdatedData.phone_number,
+          address: userUpdatedData.address,
+          governorate:{
+            id: userUpdatedData?.governorate?.id,
+            name: userUpdatedData?.governorate?.name,
+          },
+          city:{
+            id: userUpdatedData?.city?.id,
+            name: userUpdatedData?.city?.name,
+            latitude: userUpdatedData?.city?.latitude,
+            longitude: userUpdatedData?.city?.longitude,
+          },
+
         },
       }
 

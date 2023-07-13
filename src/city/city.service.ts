@@ -17,6 +17,8 @@ export class CityService {
             City.create({
               governorate_id: value.id,
               name: city.name,
+              latitude: city.latitude != 0 ? city.latitude :null,
+              longitude: city.longitude != 0 ? city.longitude :null
             })
           });
         })
